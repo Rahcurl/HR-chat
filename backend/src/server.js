@@ -34,7 +34,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  // Path adjustment to ensure it finds the dist folder correctly on the server
+  
   const frontendPath = path.join(__dirname, "frontend", "dist");
   
   app.use(express.static(frontendPath));
