@@ -11,18 +11,14 @@ import chatRoutes from "./routes/chat.route.js";
 import { connectDB } from "./lib/db.js";
 
 const app = express();
-
-// FIX 1: Use process.env.PORT for production, fallback to 5001 for local dev
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT;
 
 const __dirname = path.resolve();
 
-// FIX 2: Dynamic CORS origin
 app.use(
   cors({
-    // In production, we allow the app to talk to itself. In dev, we allow localhost:5173
-    origin: process.env.NODE_ENV === "production" ? false : "http://localhost:5173",
-    credentials: true,
+    origin: "http://localhost:5173",
+    credentials: true, // allow frontend to send cookies
   })
 );
 
@@ -34,17 +30,13 @@ app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  
-  const frontendPath = path.join(__dirname, "frontend", "dist");
-  
-  app.use(express.static(frontendPath));
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
 
-// FIX 3: Ensure DB connects before or during server start
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
