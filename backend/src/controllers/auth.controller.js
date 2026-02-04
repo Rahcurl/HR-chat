@@ -50,7 +50,7 @@ export async function signup(req, res) {
       expiresIn: "7d",
     });
 
-    res.cookie("jwt", token, {
+   res.cookie("jwt", token, {
   httpOnly: true,
   secure: true, // Always use secure in production
   sameSite: "none", // IMPORTANT: Changed from "strict" to "none"
@@ -97,7 +97,12 @@ export async function login(req, res) {
 }
 
 export function logout(req, res) {
-  res.clearCookie("jwt");
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 0, // Expire immediately
+  });
   res.status(200).json({ success: true, message: "Logout successful" });
 }
 
