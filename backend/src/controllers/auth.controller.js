@@ -51,11 +51,11 @@ export async function signup(req, res) {
     });
 
     res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true, // prevent XSS attacks,
-      sameSite: "strict", // prevent CSRF attacks
-      secure: process.env.NODE_ENV === "production",
-    });
+  httpOnly: true,
+  secure: true, // Always use secure in production
+  sameSite: "none", // IMPORTANT: Changed from "strict" to "none"
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+});
 
     res.status(201).json({ success: true, user: newUser });
   } catch (error) {
